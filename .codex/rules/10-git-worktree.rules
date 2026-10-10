@@ -1,0 +1,101 @@
+# Androidオンデバイス要約アプリ: Worktree / Git履歴の保護
+# .rules は実行コマンドのプレフィックスを照合する。AGENTS.md の代替ではない。
+
+# Worktreeを直接変更しない。承認済みworktree-management Skillから管理する。
+# 読み取り専用の「git worktree list」はこのルールに該当しない。
+prefix_rule(
+    pattern = ["git", "worktree", ["add", "remove", "move", "prune", "repair", "lock", "unlock"]],
+    decision = "forbidden",
+    justification = "Worktreeの変更は禁止です。承認済みworktree-management Skillを使用し、Trusted状態を確認してください。",
+    match = ["git worktree add ../task-001", "git worktree remove ../task-001 --force", "git worktree prune"],
+    not_match = ["git worktree list", "git status"],
+)
+
+# 作業成果や履歴を失う操作は既定で実行させない。
+prefix_rule(
+    pattern = ["git", "reset", "--hard"],
+    decision = "forbidden",
+    justification = "未コミット変更の破棄は禁止です。git status/diffを確認して人間に復旧・整理方法を相談してください。",
+    match = ["git reset --hard HEAD~1"],
+    not_match = ["git reset --soft HEAD~1"],
+)
+
+prefix_rule(
+    pattern = ["git", "clean", ["-f", "-fd", "-df", "-fx", "-xf", "-fdx", "-fxd", "-dfx", "-dxf", "-xdf", "-xfd", "--force"]],
+    decision = "forbidden",
+    justification = "未追跡ファイルを削除しないでください。git clean -nで確認し、安全な整理方法を提案してください。",
+    match = ["git clean -fd", "git clean -fdx", "git clean --force -d"],
+    not_match = ["git clean -n", "git status --short"],
+)
+
+prefix_rule(
+    pattern = ["git", "branch", "-D"],
+    decision = "forbidden",
+    justification = "未統合の可能性があるブランチの強制削除は禁止です。Skillの削除手順とマージ状況を確認してください。",
+)
+
+prefix_rule(
+    pattern = ["git", "stash", ["drop", "clear"]],
+    decision = "forbidden",
+    justification = "stash内の未統合成果物の削除は禁止です。対象とバックアップを人間に確認してください。",
+)
+
+prefix_rule(
+    pattern = ["git", "checkout", ["-f", "--force", "-B"]],
+    decision = "forbidden",
+    justification = "強制checkoutやブランチ上書きは禁止です。差分を保持して変更方針を確認してください。",
+)
+
+prefix_rule(
+    pattern = ["git", "switch", "-C"],
+    decision = "forbidden",
+    justification = "既存ブランチへの強制付け替えは禁止です。新しいTaskブランチを作成してください。",
+)
+
+prefix_rule(
+    pattern = ["git", "restore"],
+    decision = "prompt",
+    justification = "作業変更の取り消しにつながります。対象差分と保持すべき成果物を確認してください。",
+    match = ["git restore src/main/MainActivity.kt", "git restore --staged README.md"],
+    not_match = ["git status"],
+)
+
+prefix_rule(
+    pattern = ["git", "checkout", "--"],
+    decision = "prompt",
+    justification = "対象ファイルの変更を破棄する可能性があります。差分の確認と承認が必要です。",
+)
+
+prefix_rule(
+    pattern = ["git", "commit", "--amend"],
+    decision = "prompt",
+    justification = "コミット履歴を書き換えます。PRや共同作業への影響を確認してください。",
+)
+
+# リモートへの反映は人間の確認を挟む。
+prefix_rule(
+    pattern = ["git", "push"],
+    decision = "prompt",
+    justification = "リモート変更の前にTask・PR・CI・承認状況を確認してください。",
+    match = ["git push origin task/001", "git push --force origin task/001"],
+    not_match = ["git fetch origin", "git status"],
+)
+
+# 代表的な強制push形式を禁止。引数の順序違い等はAGENTS.md/CIでも制御する。
+prefix_rule(
+    pattern = ["git", "push", ["--force", "-f", "--force-with-lease", "--force-if-includes"]],
+    decision = "forbidden",
+    justification = "強制pushは禁止です。履歴を保持するPR/通常pushを使用してください。",
+)
+
+prefix_rule(
+    pattern = ["git", "push", "origin", ["main", "master"]],
+    decision = "forbidden",
+    justification = "main/masterへの直接pushは禁止です。TaskブランチからPRを作成してください。",
+)
+
+prefix_rule(
+    pattern = ["git", "remote", ["set-url", "remove", "rename"]],
+    decision = "prompt",
+    justification = "リモート設定変更により誤送信や作業不能の恐れがあります。変更目的を確認してください。",
+)

@@ -1,0 +1,87 @@
+# Androidオンデバイス要約アプリ: GitHub操作・公開の承認境界
+# GitHub IssuesはTask管理の正本。Issue作成・通常の編集は妨げない。
+
+prefix_rule(
+    pattern = ["gh", "pr", "merge"],
+    decision = "prompt",
+    justification = "PR統合前に必須CI、レビュー、該当マイルストーン承認を確認してください。",
+    match = ["gh pr merge 12 --squash", "gh pr merge --auto"],
+    not_match = ["gh pr view 12", "gh issue edit 12 --add-label in-progress"],
+)
+
+prefix_rule(
+    pattern = ["gh", "pr", "close"],
+    decision = "prompt",
+    justification = "PRのクローズは成果物・レビューへの影響を確認してから実施してください。",
+)
+
+prefix_rule(
+    pattern = ["gh", "issue", "delete"],
+    decision = "forbidden",
+    justification = "Task履歴となるGitHub Issueは削除せず、必要に応じてクローズと理由記録を行ってください。",
+)
+
+prefix_rule(
+    pattern = ["gh", "issue", "close"],
+    decision = "prompt",
+    justification = "DoD・CI・関連PR・承認ゲートを確認してからIssueをクローズしてください。",
+)
+
+# 任意のHTTPメソッドを実行し得るgh apiは保守的に承認を要求。
+prefix_rule(
+    pattern = ["gh", "api"],
+    decision = "prompt",
+    justification = "GitHub APIは変更・削除にも使用できます。エンドポイント、HTTPメソッド、対象リポジトリを確認してください。",
+)
+
+# リポジトリ削除・資格情報変更・GitHub Release公開はCodexから直接行わない。
+prefix_rule(
+    pattern = ["gh", "repo", "delete"],
+    decision = "forbidden",
+    justification = "リポジトリ削除は禁止です。必要な場合は人間が管理画面から実施してください。",
+)
+
+prefix_rule(
+    pattern = ["gh", "release", ["create", "upload", "delete", "edit"]],
+    decision = "forbidden",
+    justification = "Releaseの公開・編集・削除は人間の最終承認が必要です。手順案とRelease候補を提示してください。",
+    match = ["gh release create v1.0.0", "gh release upload v1.0.0 app.aab"],
+    not_match = ["gh release list", "gh release view v1.0.0"],
+)
+
+prefix_rule(
+    pattern = ["gh", "secret", ["set", "delete"]],
+    decision = "forbidden",
+    justification = "GitHub Secretsの登録・削除は人間が行ってください。秘密値を会話・ログ・Issueへ出力しないでください。",
+)
+
+prefix_rule(
+    pattern = ["gh", "auth", "token"],
+    decision = "forbidden",
+    justification = "認証トークンの標準出力への取り出しは禁止です。gh auth statusなどの非機密な方法で確認してください。",
+)
+
+prefix_rule(
+    pattern = ["gh", "workflow", ["run", "disable", "enable"]],
+    decision = "prompt",
+    justification = "Workflowの手動起動・有効化変更はCIや公開処理を伴うため、人間が目的と影響を確認してください。",
+)
+
+# 代表的なGoogle Play公開経路。未列挙の公開経路はAGENTS.mdと権限分離で防ぐ。
+prefix_rule(
+    pattern = ["fastlane", "supply"],
+    decision = "forbidden",
+    justification = "Google Playへのアップロード・公開は禁止です。Release Gateと人間承認を経てください。",
+)
+
+prefix_rule(
+    pattern = ["bundle", "exec", "fastlane", "supply"],
+    decision = "forbidden",
+    justification = "Google Playへのアップロード・公開は禁止です。Release Gateと人間承認を経てください。",
+)
+
+prefix_rule(
+    pattern = ["./gradlew", ["publishReleaseBundle", "publishBundle", "publishReleaseApk", "publishApk", "promoteArtifact", "promoteReleaseArtifact"]],
+    decision = "forbidden",
+    justification = "Google Play公開相当のGradleタスクは禁止です。人間によるMG-06承認と手動公開へ切り替えてください。",
+)
