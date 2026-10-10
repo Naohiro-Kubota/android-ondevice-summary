@@ -1,0 +1,33 @@
+# Androidオンデバイス要約アプリ: 端末・ファイルの破壊的操作
+
+prefix_rule(
+    pattern = ["rm", ["-rf", "-fr", "-rRf", "-Rrf", "--recursive", "--force"]],
+    decision = "forbidden",
+    justification = "再帰的・強制的な削除は禁止です。対象を確認し、管理Skillや限定的な安全な手順を使用してください。",
+    match = ["rm -rf ../worktrees/task-001", "rm --recursive temporary-directory"],
+    not_match = ["ls -la", "rm temp-file.txt"],
+)
+
+prefix_rule(
+    pattern = ["rm", ["-r", "-R", "-f"]],
+    decision = "prompt",
+    justification = "削除対象の範囲と未統合成果物の有無を確認してください。",
+)
+
+prefix_rule(
+    pattern = ["sudo"],
+    decision = "prompt",
+    justification = "管理者権限の操作は環境変更を伴います。必要性と対象を確認してください。",
+)
+
+prefix_rule(
+    pattern = ["adb", "uninstall"],
+    decision = "prompt",
+    justification = "実機/Emulatorのアプリとデータを削除します。対象デバイス・パッケージ名を確認してください。",
+)
+
+prefix_rule(
+    pattern = ["adb", "shell", "pm", "clear"],
+    decision = "prompt",
+    justification = "アプリデータが消去されます。実機かEmulatorか、対象を確認してください。",
+)
