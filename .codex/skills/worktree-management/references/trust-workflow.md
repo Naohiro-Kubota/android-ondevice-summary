@@ -21,7 +21,7 @@ python3 .codex/skills/worktree-management/scripts/worktree.py authorize-root \
 - 既存設定を削除・置換しない。競合する既存設定があれば停止する。
 - **親パスや任意のユーザーディレクトリを一括Trustedにしない。**
 - `config.toml`に構文エラーがある場合は変更しない。
-- この設定はユーザー固有。WorktreeごとにCodexの再起動・実効確認が必要。
+- この設定はユーザー固有。保存先の人間承認は初回のみで、Worktreeごとの再承認は不要。Codexが各Worktreeを開いて設定の読込とルールの実効性を確認する。
 
 ## 3. 確認
 
@@ -30,7 +30,7 @@ python3 .codex/skills/worktree-management/scripts/worktree.py inspect \
   --repo . --path ../worktrees/task-001-bootstrap
 ```
 
-- コマンドの出力がTrusted設定の存在を示しても、**Codex実行時のルール適用を完全保証はできない**。
+- コマンドの出力がTrusted設定の存在を示しても、**Codex実行時のルール適用を完全保証はできない**。Codexセッションで確認できない場合は作業を開始しない。
 - `.codex/rules`の内容は、Worktreeに追跡・配置されたファイルを使用する。
 - Codex CLIがある場合は`codex execpolicy check`で、禁止操作が実行されないことを**判定のみ**確認する（削除・pushの実行はしない）。
 - `gh`認証・権限は別に確認する。

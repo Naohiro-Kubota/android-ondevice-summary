@@ -15,8 +15,8 @@
 ## 設置と有効化
 
 1. **リポジトリルート**の`.codex/rules/`へこのファイル群を配置します。
-2. Codexでそのリポジトリ/Worktreeの`.codex`設定レイヤが**Trusted**であることを人間が承認・確認します。未承認パスを勝手にTrustedにしません。
-3. Codexを再起動してルールを読み込みます。Worktreeごとに適用確認が必要です。
+2. Worktree保存先は人間が事前承認します。承認済み保存先の各Worktreeは管理Skillが正確なパスだけをTrustedに登録し、Codexが確認します。人間による毎回の再承認は不要です。未承認パスを勝手にTrustedにしません。
+3. Codexが新Worktreeを開いてルールを読み込みます。Worktreeごとに実行時の適用確認が必要です。
 4. `worktree-management` Skill本体は**別途導入が必要**です。未導入ならTASK-036はBLOCKEDとし、直接`git worktree add/remove`へ回避しません。
 
 ## 動作確認（Codex CLIが利用可能な環境）
