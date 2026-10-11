@@ -20,7 +20,7 @@ description: CodexのGit Worktreeを安全に作成・検査・削除する。TA
 2. 未承認の格納先は、**人間が対話端末から**`authorize-root`を実行する。例と注意事項は[trust-workflow.md](references/trust-workflow.md)を参照。
 3. 作成: `python3 .codex/skills/worktree-management/scripts/worktree.py create --repo . --root ../worktrees --name task-001-bootstrap --branch task/001-bootstrap`
 4. 検査: `python3 .codex/skills/worktree-management/scripts/worktree.py inspect --repo . --path ../worktrees/task-001-bootstrap`
-5. 新しいWorktreeでCodexを再起動・開き直し、Trusted状態・ルールの実効性を確認してから作業する。構成ファイルの存在だけで「実効確認済み」としない。
+5. Codexが新しいWorktreeを開き、Trusted状態・ルールの実効性を確認してから作業する。承認済み保存先の各Worktreeに人間の再承認は求めない。構成ファイルの存在や`execpolicy check`の判定だけで「実効確認済み」としない。Codexセッションで確認できなければBLOCKEDとする。
 6. マージ後、未コミット/未追跡成果物が無いこと、指定した統合証跡が確認できることを確かめ、`remove`を実行する。
 
 削除（通常マージ）:
