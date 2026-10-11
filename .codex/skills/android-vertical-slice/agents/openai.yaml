@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android Vertical Slice"
+  short_description: "Composeの画面・アプリ処理・Port・自動テストを機能単位で一体実装する"
+  default_prompt: "承認済みTASKの機能Sliceを仕様・ACに従って実装し、対応するテストを追加してください。"

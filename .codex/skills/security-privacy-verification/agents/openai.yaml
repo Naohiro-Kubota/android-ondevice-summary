@@ -1,0 +1,4 @@
+interface:
+  display_name: "Security Privacy Verification"
+  short_description: "HTTPのSSRF防止とFirebaseの禁止データ非送信を検証する"
+  default_prompt: "対象のHTTPとFirebaseのセキュリティ・プライバシー検証ケースを定義し、再現可能な証跡を整理してください。"

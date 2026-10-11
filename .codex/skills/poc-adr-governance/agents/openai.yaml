@@ -1,0 +1,4 @@
+interface:
+  display_name: "PoC & ADR Governance"
+  short_description: "技術PoCの実測証跡とADRの提案・人間承認ゲートを管理する"
+  default_prompt: "対象TVの検証計画を作成し、PoCの再現手順とADR提案をまとめてください。"
