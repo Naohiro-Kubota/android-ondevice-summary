@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Task Workflow"
+  short_description: "GitHub IssuesでTaskの前提条件・並列制限・DoD・PR状態を管理する"
+  default_prompt: "GitHub IssuesのTASK情報と依存関係を確認し、着手可否と実行計画を整理してください。"

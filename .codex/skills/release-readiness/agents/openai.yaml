@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release Readiness"
+  short_description: "品質・セキュリティ・実機・Play公開条件と人間承認を確認する"
+  default_prompt: "現在のマイルストーンとRelease候補のGATE証跡を確認し、人間の承認が必要な項目を整理してください。"

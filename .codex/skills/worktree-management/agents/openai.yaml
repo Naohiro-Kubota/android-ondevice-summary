@@ -1,0 +1,4 @@
+interface:
+  display_name: "Worktree Management"
+  short_description: "承認済み保存先でWorktreeのTrusted登録・作成・検査・削除を行う"
+  default_prompt: "TASK用のGit Worktreeを承認済みの保存先に安全に作成し、Trusted状態を確認してください。"
