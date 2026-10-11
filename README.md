@@ -30,7 +30,9 @@
 
 **PLAN-004以降の本実装は、P0 PoCの合格（MG-02a）とADR-001〜007の人間による採用承認（MG-02b）の両方を満たすまで禁止。** PLAN-001の基盤・FakeおよびPLAN-002の検証コードは例外として着手可能。
 
-並列実行は最大2タスク、異なるWorktreeを使用。Task状態の正本はGitHub Issues、要件とADRの正本はこのリポジトリの文書。コードは未作成。
+並列実行は最大2タスク、異なるWorktreeを使用。Task状態の正本はGitHub Issues、要件とADRの正本はこのリポジトリの文書。TASK-001では単一`:app`のKotlin/Compose骨格と通常起動時の利用案内画面だけを追加する。共有Intentの処理、AI、HTTP、Firebaseの本実装は後続Taskと承認ゲートに従う。
+
+基盤の確認: `./gradlew assembleDebug lintDebug connectedDebugAndroidTest`。Emulatorテストには起動済みのAndroid仮想端末が必要。
 
 ## 原典と再構成について
 

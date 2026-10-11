@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">記事要約</string>
+    <string name="home_title">記事を共有して要約</string>
+    <string name="home_instructions">Chromeで記事を開き、共有からこのアプリを選んでください。</string>
+</resources>
