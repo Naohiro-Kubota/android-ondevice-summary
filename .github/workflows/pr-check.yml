@@ -25,13 +25,13 @@ jobs:
         run: python3 scripts/validate_requirements.py
       - name: Source dependency policy
         run: |
-          if rg -n -g '**/{domain,application}/**/*.kt' '^\s*import\s+(com\.google\.firebase|com\.google\.mlkit|okhttp3)' app/src/main; then
+          if git grep -n -E '^[[:space:]]*import[[:space:]]+(com\.google\.firebase|com\.google\.mlkit|okhttp3)' -- ':(glob)app/src/main/**/domain/**/*.kt' ':(glob)app/src/main/**/application/**/*.kt'; then
             echo "Domain/Application must not import concrete SDKs"
             exit 1
           else
             test "$?" -eq 1
           fi
-          if rg -n -g '**/presentation/**/*.kt' '^\s*import\s+com\.google\.firebase' app/src/main; then
+          if git grep -n -E '^[[:space:]]*import[[:space:]]+com\.google\.firebase' -- ':(glob)app/src/main/**/presentation/**/*.kt'; then
             echo "Presentation must not import Firebase"
             exit 1
           else
